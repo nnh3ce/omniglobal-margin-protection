@@ -5,7 +5,7 @@ from pyspark.sql.types import DoubleType, IntegerType, StringType, StructType, S
 current_user = spark.sql("SELECT current_user()").first()[0]
 #dynamically retrieve user email
 
-file_path = "/Workspace/Users/nnh3ce@gmail.com/omniglobal-margin-protection"
+file_path = "/Workspace/Users/nnh3ce@gmail.com/omniglobal-margin-protection/orders"
 #"/Volumes/omniglobal__margin_protection/omni_bronze/ingest_files"  #manually uploaded
 
 schema = StructType(
@@ -27,6 +27,7 @@ schema = StructType(
 
 def ingest_raw():
     return (spark.readStream.format("cloudFiles").schema(schema).option("cloudFiles.format","json").load(file_path))
+
 
 
 
