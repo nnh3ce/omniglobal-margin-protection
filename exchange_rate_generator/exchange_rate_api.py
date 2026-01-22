@@ -5,21 +5,23 @@ import random
 import os
 from datetime import datetime
 
-# Create a folder named 'landing_zone' in the same directory as this script
-OUTPUT_FOLDER = 'C:\\Users\\pa\\Documents\\data_project_1\\currency_rates'
-if not os.path.exists(OUTPUT_FOLDER):
-    os.makedirs(OUTPUT_FOLDER)
 
-foreign_currencies = ['EUR','GBP','JPY','CAD']
-
-url = 'https://www.alphavantage.co/query?'
 
 # --- API --- #
 def get_exchangeRate ():
-    
+    # Create a folder named 'landing_zone' in the same directory as this script
+    OUTPUT_FOLDER = 'C:\\Users\\pa\\Documents\\data_project_1\\exchange_rates'
+    if not os.path.exists(OUTPUT_FOLDER):
+        os.makedirs(OUTPUT_FOLDER)
+
+    foreign_currencies = ['EUR','GBP','JPY','CAD']
+
+    url = 'https://www.alphavantage.co/query?'  
     print("Fetching exchange rates from Alpha Advantage...")
-    rates = []
-    for currency in range(len(foreign_currencies)):
+    #rates = []
+    #cleaned_rates = []
+    
+    for currency in range(0,4):
         try:        
             params = {
                 "function":'CURRENCY_EXCHANGE_RATE',
@@ -31,7 +33,6 @@ def get_exchangeRate ():
             response = requests.get(url, params=params)
             data = response.json()
             rate = data.get("Realtime Currency Exchange Rate",[])
-            rates.append(rate)
             time.sleep(2)
 
         except Exception as e:
@@ -47,23 +48,22 @@ def get_exchangeRate ():
                 "8. Bid Price": "0.0",
                 "9. Ask Price": "0.0"
                 }
-    return rates
+            
+        #clean up: remove spaces in key values for databricks column requirement
+        cleaned_rate = {k.replace(" ", "_"): v for k, v in rate.items()}
 
-def save_data():
     
-    exchange_rates = get_exchangeRate()
+        if not cleaned_rate:
+            print("No Exchange Rates found! Exiting.")
+            return
     
-    if not exchange_rates:
-        print("No Exchange Rates found! Exiting.")
-        return
-    
-    date_run = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        date_run = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-    filename = f"{OUTPUT_FOLDER}\\exchange_rate_{date_run}.json"
+        filename = f"{OUTPUT_FOLDER}\\exchange_rate_{date_run}.json"
     
-    with open(filename, 'w') as f:
-        json.dump(exchange_rates, f, indent=4)
-    print(f"Saved file: exchange_rate_{date_run} ")
+        with open(filename, 'w') as f:
+            json.dump(cleaned_rate, f, indent=4)
+        print(f"Saved file: exchange_rate_{date_run} ")
 
 if __name__ == "__main__":
-    save_data()
+    get_exchangeRate()
