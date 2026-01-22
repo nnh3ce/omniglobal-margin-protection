@@ -10,7 +10,8 @@ from datetime import datetime
 # --- API --- #
 def get_exchangeRate ():
     # Create a folder named 'landing_zone' in the same directory as this script
-    OUTPUT_FOLDER = 'C:\\Users\\pa\\Documents\\data_project_1\\exchange_rates'
+    OUTPUT_FOLDER = '/Volumes/omniglobal__margin_protection/omni_bronze/ingest_files/exchange_rates/'
+    #'C:\\Users\\pa\\Documents\\data_project_1\\exchange_rates' # for testing
     if not os.path.exists(OUTPUT_FOLDER):
         os.makedirs(OUTPUT_FOLDER)
 
