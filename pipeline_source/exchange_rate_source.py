@@ -22,6 +22,7 @@ schema = StructType(
 
 def exchange_rates_raw():
 
-   df = spark.readStream.format("cloudFiles").schema(schema).option("cloudFiles.format","json").option("cloudFiles.inferColumnTypes", "true").load(file_path)
+   df = spark.readStream.format("cloudFiles").schema(schema).option("cloudFiles.format","json").load(file_path)
+
 
    return df
