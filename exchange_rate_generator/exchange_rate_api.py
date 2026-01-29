@@ -68,3 +68,5 @@ def get_exchangeRate ():
 
 if __name__ == "__main__":
     get_exchangeRate()
+
+    #test2
